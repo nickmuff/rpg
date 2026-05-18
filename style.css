@@ -1,0 +1,15 @@
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.4);
+}
+
+.rune-bg {
+  background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
+                    url('https://images.unsplash.com/photo-1615363172727-4c4f9c2c6e6c');
+  background-size: cover;
+  background-position: center;
+}
