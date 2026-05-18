@@ -8,30 +8,33 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
     .hero-bg {
-      background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://i.imgur.com/0VTJC.png');
+      background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://images7.alphacoders.com/138/thumb-1920-1382510.jpg');
       background-size: cover;
       background-position: center;
+      background-attachment: fixed;
     }
-    section { scroll-margin-top: 80px; }
+    section { scroll-margin-top: 100px; }
+    .nav-link { transition: all 0.3s; }
+    .nav-link:hover { color: #bef575; }
   </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100">
 
   <!-- Navbar -->
-  <nav class="fixed top-0 w-full bg-black/90 border-b border-lime-800 z-50">
+  <nav class="fixed top-0 w-full bg-black/95 border-b border-lime-800 z-50">
     <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <span class="text-4xl">🌺</span>
+        <span class="text-4xl">🌸</span>
         <h1 class="text-3xl font-bold tracking-widest text-lime-300">NECTOFLORA</h1>
       </div>
       <div class="flex gap-8 text-lg font-medium">
-        <a href="#" onclick="showSection('home')" class="hover:text-lime-400 transition">Início</a>
-        <a href="#" onclick="showSection('world')" class="hover:text-lime-400 transition">O Mundo</a>
-        <a href="#" onclick="showSection('rules')" class="hover:text-lime-400 transition">Regras & Sistema</a>
-        <a href="#" onclick="showSection('creation-info')" class="hover:text-lime-400 transition">Criação de Personagem</a>
-        <a href="#" onclick="showSection('form')" class="hover:text-lime-400 transition">Criar Personagem</a>
+        <a href="#" onclick="showSection('home')" class="nav-link">Início</a>
+        <a href="#" onclick="showSection('world')" class="nav-link">O Mundo</a>
+        <a href="#" onclick="showSection('rules')" class="nav-link">Regras</a>
+        <a href="#" onclick="showSection('creation-info')" class="nav-link">Criação</a>
+        <a href="#" onclick="showSection('form')" class="nav-link text-lime-400">Criar Personagem</a>
       </div>
-      <div id="user-info"></div>
+      <div id="user-info" class="text-sm"></div>
     </div>
   </nav>
 
@@ -39,86 +42,67 @@
   <section id="home" class="hero-bg h-screen flex items-center justify-center text-center">
     <div>
       <h1 class="text-7xl md:text-8xl font-bold tracking-widest mb-4">NECTOFLORA</h1>
-      <p class="text-3xl text-lime-300 mb-10">Um mundo vivo onde a magia floresce</p>
+      <p class="text-3xl text-lime-300 mb-10">Um mundo onde a magia floresce</p>
       <button onclick="showSection('form')" 
-              class="bg-lime-600 hover:bg-lime-500 text-black font-bold text-2xl px-12 py-6 rounded-3xl transition transform hover:scale-105">
+              class="bg-lime-600 hover:bg-lime-500 text-black font-bold text-2xl px-12 py-6 rounded-3xl transition">
         Criar Seu Personagem
       </button>
     </div>
   </section>
 
   <!-- O MUNDO -->
-  <section id="world" class="hidden py-20 bg-zinc-900">
+  <section id="world" class="hidden py-24 bg-zinc-900">
     <div class="max-w-5xl mx-auto px-6">
       <h2 class="text-5xl font-bold text-center mb-12 text-lime-300">O Mundo de Nectoflora</h2>
-      <div class="prose prose-invert prose-lg max-w-none">
-        <p class="text-xl leading-relaxed">
-          <!-- Cole aqui sua lore completa -->
-          Bem-vindo a Nectoflora, um mundo onde a magia brota da própria terra como flores eternas. 
-          Antigas florestas vivas, ruínas cobertas de musgo brilhante, cidades construídas em árvores gigantes 
-          e segredos florindo nas profundezas...
-        </p>
-        <!-- Adicione mais parágrafos conforme sua história -->
+      <div class="prose prose-invert text-lg max-w-none">
+        <p>Cole aqui toda a história e lore do seu mundo...</p>
       </div>
     </div>
   </section>
 
-  <!-- REGRAS & SISTEMA -->
-  <section id="rules" class="hidden py-20 bg-black">
+  <!-- REGRAS -->
+  <section id="rules" class="hidden py-24 bg-black">
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="text-5xl font-bold text-center mb-12 text-lime-300">Regras & Sistema</h2>
-      
-      <div class="grid md:grid-cols-2 gap-12">
-        <div>
-          <h3 class="text-2xl font-bold mb-6">Atributos e Derivados</h3>
-          <ul class="space-y-4 text-lg">
-            <li><strong>PV</strong> = 8 + (FOR × 2)</li>
-            <li><strong>Mana</strong> = 4 + (MAG × 2)</li>
-            <li><strong>Sanidade</strong> = 8 + (ESP × 2)</li>
-            <li><strong>Defesa</strong> = 10 + AGI</li>
-            <li><strong>Movimento</strong> = 3 + AGI quadrados</li>
-            <li>Resistência Física = ESP</li>
-            <li>Resistência Mágica = MAG</li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-2xl font-bold mb-6">Testes e Perícias</h3>
-          <p class="mb-4">1d20 + Atributo + Bônus</p>
-          <p><strong>Dificuldades:</strong> Fácil 10 | Médio 13 | Difícil 16 | Épico 20</p>
-          <p class="mt-6"><strong>Perícias:</strong> Treinada (+2) | Especialista (+4)</p>
-        </div>
-      </div>
-
-      <!-- Você pode colar aqui mais seções de regras -->
+      <!-- Cole aqui todas as regras -->
+      <p class="text-center text-zinc-400">Área para regras do sistema...</p>
     </div>
   </section>
 
-  <!-- INFORMAÇÕES DE CRIAÇÃO (Explicativa) -->
-  <section id="creation-info" class="hidden py-20 bg-zinc-900">
+  <!-- INFORMAÇÕES DE CRIAÇÃO -->
+  <section id="creation-info" class="hidden py-24 bg-zinc-900">
     <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-5xl font-bold text-center mb-16 text-lime-300">Criação de Personagem</h2>
-      
-      <h3 class="text-3xl font-bold mb-8">Atributos</h3>
-      <p class="mb-12">Distribua <strong>6 pontos</strong>. Todos começam em 0 (máx +4, mín -2).</p>
-
-      <h3 class="text-3xl font-bold mb-8">Raças</h3>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="races-grid"></div>
-
-      <h3 class="text-3xl font-bold mt-16 mb-8">Profissões</h3>
-      <div class="grid md:grid-cols-2 gap-6" id="profs-grid"></div>
+      <h2 class="text-5xl font-bold text-center mb-12 text-lime-300">Como Criar seu Personagem</h2>
+      <p class="text-center text-xl">Aqui vai a explicação completa de raças, profissões, atributos, etc.</p>
     </div>
   </section>
 
   <!-- FORMULÁRIO DE CRIAÇÃO -->
-  <section id="form" class="hidden py-20 bg-black">
+  <section id="form" class="hidden py-24 bg-black">
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="text-5xl font-bold text-center mb-12">Criar Personagem</h2>
-      <!-- Formulário completo aqui (vou mandar na próxima se quiser) -->
       <div class="bg-zinc-900 rounded-3xl p-10">
-        <p class="text-center text-zinc-400">Formulário de criação será colocado aqui.</p>
+        <p class="text-center">Formulário completo será colocado aqui em breve.</p>
       </div>
     </div>
   </section>
+
+  <script>
+    function showSection(sectionId) {
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
+      
+      // Scroll suave para o topo da seção
+      document.getElementById(sectionId).scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Mostrar Home no início
+    window.onload = () => {
+      showSection('home');
+    };
+  </script>
 
   <script src="firebase-config.js"></script>
   <script src="app.js"></script>
