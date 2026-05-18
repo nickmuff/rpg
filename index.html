@@ -6,86 +6,116 @@
   <title>Nectoflora RPG</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <style>
-    body { font-family: 'Segoe UI', system-ui, sans-serif; }
     .hero-bg {
-      background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://images7.alphacoders.com/138/thumb-1920-1382510.jpg'); /* substitua pela imagem das flores */
+      background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://i.imgur.com/0VTJC.png');
       background-size: cover;
       background-position: center;
     }
-    .nav-link {
-      transition: all 0.3s;
-    }
-    .nav-link:hover {
-      color: #a3e635;
-      transform: translateX(8px);
-    }
+    section { scroll-margin-top: 80px; }
   </style>
 </head>
-<body class="bg-black text-zinc-100">
+<body class="bg-zinc-950 text-zinc-100">
 
   <!-- Navbar -->
-  <nav class="bg-black/80 border-b border-lime-900 fixed w-full z-50">
+  <nav class="fixed top-0 w-full bg-black/90 border-b border-lime-800 z-50">
     <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <span class="text-3xl">🌸</span>
-        <h1 class="text-2xl font-bold tracking-widest">NECTOFLORA</h1>
+        <span class="text-4xl">🌺</span>
+        <h1 class="text-3xl font-bold tracking-widest text-lime-300">NECTOFLORA</h1>
       </div>
-      <div class="flex gap-8 text-lg">
-        <a href="#" onclick="showSection('home')" class="nav-link">Início</a>
-        <a href="#" onclick="showSection('lore')" class="nav-link">O Mundo</a>
-        <a href="#" onclick="showSection('rules')" class="nav-link">Regras</a>
-        <a href="#" onclick="showSection('creation')" class="nav-link">Criar Personagem</a>
-        <a href="#" onclick="showSection('characters')" class="nav-link">Meus Personagens</a>
+      <div class="flex gap-8 text-lg font-medium">
+        <a href="#" onclick="showSection('home')" class="hover:text-lime-400 transition">Início</a>
+        <a href="#" onclick="showSection('world')" class="hover:text-lime-400 transition">O Mundo</a>
+        <a href="#" onclick="showSection('rules')" class="hover:text-lime-400 transition">Regras & Sistema</a>
+        <a href="#" onclick="showSection('creation-info')" class="hover:text-lime-400 transition">Criação de Personagem</a>
+        <a href="#" onclick="showSection('form')" class="hover:text-lime-400 transition">Criar Personagem</a>
       </div>
-      <div id="user-info" class="text-sm"></div>
+      <div id="user-info"></div>
     </div>
   </nav>
 
   <!-- HOME -->
   <section id="home" class="hero-bg h-screen flex items-center justify-center text-center">
-    <div class="max-w-3xl">
-      <h1 class="text-7xl font-bold mb-4 tracking-wider">NECTOFLORA</h1>
-      <p class="text-3xl text-lime-300 mb-8">Um RPG de Fantasia Viva</p>
-      <button onclick="showSection('creation')" 
-              class="bg-lime-600 hover:bg-lime-500 text-black font-bold text-xl px-10 py-5 rounded-2xl transition">
+    <div>
+      <h1 class="text-7xl md:text-8xl font-bold tracking-widest mb-4">NECTOFLORA</h1>
+      <p class="text-3xl text-lime-300 mb-10">Um mundo vivo onde a magia floresce</p>
+      <button onclick="showSection('form')" 
+              class="bg-lime-600 hover:bg-lime-500 text-black font-bold text-2xl px-12 py-6 rounded-3xl transition transform hover:scale-105">
         Criar Seu Personagem
       </button>
     </div>
   </section>
 
-  <!-- LORE / O MUNDO -->
-  <section id="lore" class="hidden py-20 bg-zinc-950">
-    <div class="max-w-4xl mx-auto px-6">
-      <h2 class="text-5xl font-bold text-center mb-12">O Mundo de Nectoflora</h2>
-      <div id="lore-content" class="prose prose-invert text-lg leading-relaxed">
-        <!-- Cole aqui a história do seu mundo -->
-        <p>Escreva aqui a lore do seu mundo...</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- REGRAS -->
-  <section id="rules" class="hidden py-20 bg-zinc-900">
+  <!-- O MUNDO -->
+  <section id="world" class="hidden py-20 bg-zinc-900">
     <div class="max-w-5xl mx-auto px-6">
-      <h2 class="text-5xl font-bold text-center mb-12">Regras e Sistema</h2>
-      <!-- Cole aqui todo o sistema que você já tem (atributos, perícias, etc.) -->
-      <div class="bg-zinc-800 rounded-3xl p-10">
-        <p class="text-center text-zinc-400">Cole aqui todas as regras do sistema...</p>
+      <h2 class="text-5xl font-bold text-center mb-12 text-lime-300">O Mundo de Nectoflora</h2>
+      <div class="prose prose-invert prose-lg max-w-none">
+        <p class="text-xl leading-relaxed">
+          <!-- Cole aqui sua lore completa -->
+          Bem-vindo a Nectoflora, um mundo onde a magia brota da própria terra como flores eternas. 
+          Antigas florestas vivas, ruínas cobertas de musgo brilhante, cidades construídas em árvores gigantes 
+          e segredos florindo nas profundezas...
+        </p>
+        <!-- Adicione mais parágrafos conforme sua história -->
       </div>
     </div>
   </section>
 
-  <!-- CRIAÇÃO DE PERSONAGEM -->
-  <section id="creation" class="hidden py-20 bg-zinc-950">
+  <!-- REGRAS & SISTEMA -->
+  <section id="rules" class="hidden py-20 bg-black">
     <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-5xl font-bold text-center mb-12">Criação de Personagem</h2>
-      <!-- Aqui vai o formulário completo -->
-      <div id="creation-form">
-        <!-- Vamos preencher isso na próxima mensagem se quiser -->
+      <h2 class="text-5xl font-bold text-center mb-12 text-lime-300">Regras & Sistema</h2>
+      
+      <div class="grid md:grid-cols-2 gap-12">
+        <div>
+          <h3 class="text-2xl font-bold mb-6">Atributos e Derivados</h3>
+          <ul class="space-y-4 text-lg">
+            <li><strong>PV</strong> = 8 + (FOR × 2)</li>
+            <li><strong>Mana</strong> = 4 + (MAG × 2)</li>
+            <li><strong>Sanidade</strong> = 8 + (ESP × 2)</li>
+            <li><strong>Defesa</strong> = 10 + AGI</li>
+            <li><strong>Movimento</strong> = 3 + AGI quadrados</li>
+            <li>Resistência Física = ESP</li>
+            <li>Resistência Mágica = MAG</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold mb-6">Testes e Perícias</h3>
+          <p class="mb-4">1d20 + Atributo + Bônus</p>
+          <p><strong>Dificuldades:</strong> Fácil 10 | Médio 13 | Difícil 16 | Épico 20</p>
+          <p class="mt-6"><strong>Perícias:</strong> Treinada (+2) | Especialista (+4)</p>
+        </div>
+      </div>
+
+      <!-- Você pode colar aqui mais seções de regras -->
+    </div>
+  </section>
+
+  <!-- INFORMAÇÕES DE CRIAÇÃO (Explicativa) -->
+  <section id="creation-info" class="hidden py-20 bg-zinc-900">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-5xl font-bold text-center mb-16 text-lime-300">Criação de Personagem</h2>
+      
+      <h3 class="text-3xl font-bold mb-8">Atributos</h3>
+      <p class="mb-12">Distribua <strong>6 pontos</strong>. Todos começam em 0 (máx +4, mín -2).</p>
+
+      <h3 class="text-3xl font-bold mb-8">Raças</h3>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="races-grid"></div>
+
+      <h3 class="text-3xl font-bold mt-16 mb-8">Profissões</h3>
+      <div class="grid md:grid-cols-2 gap-6" id="profs-grid"></div>
+    </div>
+  </section>
+
+  <!-- FORMULÁRIO DE CRIAÇÃO -->
+  <section id="form" class="hidden py-20 bg-black">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-5xl font-bold text-center mb-12">Criar Personagem</h2>
+      <!-- Formulário completo aqui (vou mandar na próxima se quiser) -->
+      <div class="bg-zinc-900 rounded-3xl p-10">
+        <p class="text-center text-zinc-400">Formulário de criação será colocado aqui.</p>
       </div>
     </div>
   </section>
