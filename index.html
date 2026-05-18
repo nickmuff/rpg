@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚔️ Criação de Personagem - RPG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-zinc-950 text-zinc-100">
+
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-72 bg-zinc-900 border-r border-amber-900 p-6 flex flex-col">
+      <h1 class="text-3xl font-bold mb-10 flex items-center gap-3">
+        ⚔️ RPG Creator
+      </h1>
+      
+      <nav id="sidebar-menu" class="space-y-2 flex-1"></nav>
+
+      <div id="user-panel" class="mt-auto pt-6 border-t border-zinc-700 text-sm"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-auto" id="main-content"></div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
