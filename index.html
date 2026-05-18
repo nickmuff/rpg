@@ -3,31 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚔️ Criação de Personagem - RPG</title>
+  <title>Nectoflora RPG</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; }
+    .hero-bg {
+      background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://i.imgur.com/0VTJC.png'); /* substitua pela imagem das flores */
+      background-size: cover;
+      background-position: center;
+    }
+    .nav-link {
+      transition: all 0.3s;
+    }
+    .nav-link:hover {
+      color: #a3e635;
+      transform: translateX(8px);
+    }
+  </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100">
+<body class="bg-black text-zinc-100">
 
-  <div class="flex h-screen">
-    <!-- Sidebar -->
-    <div class="w-72 bg-zinc-900 border-r border-amber-900 p-6 flex flex-col">
-      <h1 class="text-3xl font-bold mb-10 flex items-center gap-3">
-        ⚔️ RPG Creator
-      </h1>
-      
-      <nav id="sidebar-menu" class="space-y-2 flex-1"></nav>
-
-      <div id="user-panel" class="mt-auto pt-6 border-t border-zinc-700 text-sm"></div>
+  <!-- Navbar -->
+  <nav class="bg-black/80 border-b border-lime-900 fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">🌸</span>
+        <h1 class="text-2xl font-bold tracking-widest">NECTOFLORA</h1>
+      </div>
+      <div class="flex gap-8 text-lg">
+        <a href="#" onclick="showSection('home')" class="nav-link">Início</a>
+        <a href="#" onclick="showSection('lore')" class="nav-link">O Mundo</a>
+        <a href="#" onclick="showSection('rules')" class="nav-link">Regras</a>
+        <a href="#" onclick="showSection('creation')" class="nav-link">Criar Personagem</a>
+        <a href="#" onclick="showSection('characters')" class="nav-link">Meus Personagens</a>
+      </div>
+      <div id="user-info" class="text-sm"></div>
     </div>
+  </nav>
 
-    <!-- Main Content -->
-    <div class="flex-1 overflow-auto" id="main-content"></div>
-  </div>
+  <!-- HOME -->
+  <section id="home" class="hero-bg h-screen flex items-center justify-center text-center">
+    <div class="max-w-3xl">
+      <h1 class="text-7xl font-bold mb-4 tracking-wider">NECTOFLORA</h1>
+      <p class="text-3xl text-lime-300 mb-8">Um RPG de Fantasia Viva</p>
+      <button onclick="showSection('creation')" 
+              class="bg-lime-600 hover:bg-lime-500 text-black font-bold text-xl px-10 py-5 rounded-2xl transition">
+        Criar Seu Personagem
+      </button>
+    </div>
+  </section>
+
+  <!-- LORE / O MUNDO -->
+  <section id="lore" class="hidden py-20 bg-zinc-950">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-5xl font-bold text-center mb-12">O Mundo de Nectoflora</h2>
+      <div id="lore-content" class="prose prose-invert text-lg leading-relaxed">
+        <!-- Cole aqui a história do seu mundo -->
+        <p>Escreva aqui a lore do seu mundo...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGRAS -->
+  <section id="rules" class="hidden py-20 bg-zinc-900">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="text-5xl font-bold text-center mb-12">Regras e Sistema</h2>
+      <!-- Cole aqui todo o sistema que você já tem (atributos, perícias, etc.) -->
+      <div class="bg-zinc-800 rounded-3xl p-10">
+        <p class="text-center text-zinc-400">Cole aqui todas as regras do sistema...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRIAÇÃO DE PERSONAGEM -->
+  <section id="creation" class="hidden py-20 bg-zinc-950">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-5xl font-bold text-center mb-12">Criação de Personagem</h2>
+      <!-- Aqui vai o formulário completo -->
+      <div id="creation-form">
+        <!-- Vamos preencher isso na próxima mensagem se quiser -->
+      </div>
+    </div>
+  </section>
 
   <script src="firebase-config.js"></script>
   <script src="app.js"></script>
