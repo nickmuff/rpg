@@ -139,25 +139,11 @@ function updateUserPanel() {
 }
 
 function showLoginModal() {
-  const email = prompt("Digite seu email:");
-  if (!email) return;
-  
-  const password = prompt("Digite sua senha:");
-  if (!password) return;
-  
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .catch(e => alert("Erro ao entrar: " + e.message));
+  window.location.href = 'login.html';
 }
 
 function showRegisterModal() {
-  const email = prompt("Digite seu email:");
-  if (!email) return;
-  
-  const password = prompt("Crie uma senha (mínimo 6 caracteres):");
-  if (!password) return;
-  
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .catch(e => alert("Erro ao registrar: " + e.message));
+  window.location.href = 'login.html';
 }
 
 function logout() {
