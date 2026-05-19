@@ -10,13 +10,13 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (typeof firebase !== 'undefined') {
+  firebase.initializeApp(firebaseConfig);
+  console.log("✅ Firebase inicializado com sucesso!");
+} else {
+  console.error("❌ Firebase SDK não carregado!");
+}
 
-console.log("✅ Firebase inicializado com sucesso!");
-
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// Deixar disponível globalmente
-window.auth = auth;
-window.db = db;
+// Exportar para uso global
+window.auth = firebase.auth();
+window.db = firebase.firestore();
