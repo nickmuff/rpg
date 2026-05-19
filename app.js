@@ -122,17 +122,17 @@ function updateUserPanel() {
   if (currentUser) {
     panel.innerHTML = `
       <div class="flex items-center gap-4">
-        <span class="text-emerald-400">${currentUser.email}</span>
-        <button onclick="goToMyCharacters()" class="text-emerald-400 hover:text-emerald-300">Meus Personagens</button>
-        ${isMaster ? `<button onclick="goToMasterPanel()" class="text-amber-400 hover:text-amber-300">👑 Painel Mestre</button>` : ''}
-        <button onclick="logout()" class="text-red-400 hover:text-red-300">Sair</button>
+        <span class="text-emerald-400 text-sm">👤 ${currentUser.email}</span>
+        <button onclick="goToMyCharacters()" class="text-emerald-400 hover:text-emerald-300 transition text-sm">📋 Meus Personagens</button>
+        ${isMaster ? `<button onclick="goToMasterPanel()" class="text-amber-400 hover:text-amber-300 transition text-sm">👑 Painel Mestre</button>` : ''}
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition text-sm">🚪 Sair</button>
       </div>
     `;
   } else {
     panel.innerHTML = `
       <div class="flex gap-4">
-        <button onclick="showLoginModal()" class="text-emerald-400 hover:text-emerald-300">Entrar</button>
-        <button onclick="showRegisterModal()" class="text-emerald-400 hover:text-emerald-300">Registrar</button>
+        <button onclick="showLoginModal()" class="text-emerald-400 hover:text-emerald-300 transition text-sm">Entrar</button>
+        <button onclick="showRegisterModal()" class="text-emerald-400 hover:text-emerald-300 transition text-sm">Registrar</button>
       </div>
     `;
   }
@@ -161,7 +161,9 @@ function showRegisterModal() {
 }
 
 function logout() {
-  firebase.auth().signOut();
+  firebase.auth().signOut().then(() => {
+    window.location.href = 'login.html';
+  });
 }
 
 // ==================== NAVEGAÇÃO ====================
