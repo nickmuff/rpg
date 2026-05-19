@@ -1,3 +1,5 @@
+// ==================== firebase-config.js ====================
+
 const firebaseConfig = {
   apiKey: "AIzaSyDkJK1vpKyMjqsiq2Rj4xRaIdn4CzZmYBI",
   authDomain: "nectoflora.firebaseapp.com",
@@ -10,8 +12,11 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Exportar instâncias (opcional, mas útil)
+console.log("✅ Firebase inicializado com sucesso!");
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-console.log("✅ Firebase inicializado!");
+// Deixar disponível globalmente
+window.auth = auth;
+window.db = db;
