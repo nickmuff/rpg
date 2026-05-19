@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Nectoflora RPG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: rgba(24, 24, 27, 0.95);
+      backdrop-filter: blur(10px);
+      border: 2px solid #10b981;
+      border-radius: 20px;
+      padding: 50px 40px;
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-logo {
+      font-size: 60px;
+      margin-bottom: 15px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .login-title {
+      font-size: 32px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #10b981, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: #a7f3d0;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      color: #a7f3d0;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: #18181b;
+      border: 2px solid #27272a;
+      color: #f4f1de;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      background: #1f2937;
+    }
+
+    .form-input::placeholder {
+      color: #71717a;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #000;
+      font-weight: 700;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-register {
+      width: 100%;
+      background: transparent;
+      border: 2px solid #10b981;
+      color: #10b981;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    .btn-register:hover {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: #34d399;
+      color: #34d399;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 30px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: #27272a;
+    }
+
+    .divider-text {
+      color: #71717a;
+      padding: 0 15px;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .toggle-form {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .toggle-form a {
+      color: #10b981;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-form a:hover {
+      color: #34d399;
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .success-message {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid #22c55e;
+      color: #86efac;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #a7f3d0;
+      font-size: 14px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #27272a;
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #a7f3d0;
+      cursor: pointer;
+      font-size: 18px;
+      transition: color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .password-toggle-btn:hover {
+      color: #10b981;
+    }
+
+    @media (max-width: 640px) {
+      .login-card {
+        padding: 40px 25px;
+      }
+
+      .login-title {
+        font-size: 24px;
+      }
+
+      .login-logo {
+        font-size: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Header -->
+      <div class="login-header">
+        <div class="login-logo">🌸</div>
+        <div class="login-title">NECTOFLORA</div>
+        <div class="login-subtitle">RPG SYSTEM</div>
+      </div>
+
+      <!-- Mensagens -->
+      <div id="error-message" class="error-message"></div>
+      <div id="success-message" class="success-message"></div>
+
+      <!-- Formulário de Login -->
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">📧 Email</label>
+          <input 
+            type="email" 
+            id="login-email" 
+            class="form-input" 
+            placeholder="seu@email.com" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">🔐 Senha</label>
+          <div class="password-toggle">
+            <input 
+              type="password" 
+              id="login-password" 
+              class="form-input" 
+              placeholder="••••••••" 
+              required
+            >
+            <button 
+              type="button" 
+              class="password-toggle-btn" 
+              onclick="togglePasswordVisibility('login-password')"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="loading" id="login-loading">
+          <span class="spinner"></span>
+          Entrando...
+        </div>
+
+        <button type="submit" class="btn-login" id="login-btn">
+          ⚔️ Entrar no Jogo
+        </button>
+      </form>
+
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">ou</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Formulário de Registro -->
+      <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label class="form-label">📧 Email</label>
+          <input 
+            type="email" 
+            id="register-email" 
+            class="form-input" 
+            placeholder="seu@email.com" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">🔐 Senha</label>
+          <div class="password-toggle">
+            <input 
+              type="password" 
+              id="register-password" 
+              class="form-input" 
+              placeholder="Mínimo 6 caracteres" 
+              required
+              minlength="6"
+            >
+            <button 
+              type="button" 
+              class="password-toggle-btn" 
+              onclick="togglePasswordVisibility('register-password')"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">🔐 Confirmar Senha</label>
+          <div class="password-toggle">
+            <input 
+              type="password" 
+              id="register-password-confirm" 
+              class="form-input" 
+              placeholder="Confirme sua senha" 
+              required
+              minlength="6"
+            >
+            <button 
+              type="button" 
+              class="password-toggle-btn" 
+              onclick="togglePasswordVisibility('register-password-confirm')"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="loading" id="register-loading">
+          <span class="spinner"></span>
+          Criando conta...
+        </div>
+
+        <button type="submit" class="btn-login" id="register-btn">
+          ✨ Criar Conta
+        </button>
+      </form>
+
+      <!-- Toggle entre Login e Registro -->
+      <div class="toggle-form">
+        <span id="toggle-text">Não tem conta? <a onclick="toggleForms()">Registre-se</a></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script>
+    function toggleForms() {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const toggleText = document.getElementById('toggle-text');
+
+      loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+      registerForm.style.display = registerForm.style.display === 'none' ? 'block' : 'none';
+
+      if (loginForm.style.display === 'none') {
+        toggleText.innerHTML = 'Já tem conta? <a onclick="toggleForms()">Entrar</a>';
+      } else {
+        toggleText.innerHTML = 'Não tem conta? <a onclick="toggleForms()">Registre-se</a>';
+      }
+
+      clearMessages();
+    }
+
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      const btn = event.target.closest('button');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+      } else {
+        input.type = 'password';
+        btn.innerHTML = '<i class="fas fa-eye"></i>';
+      }
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+      setTimeout(() => errorDiv.classList.remove('show'), 5000);
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('success-message');
+      successDiv.textContent = message;
+      successDiv.classList.add('show');
+      setTimeout(() => successDiv.classList.remove('show'), 3000);
+    }
+
+    function clearMessages() {
+      document.getElementById('error-message').classList.remove('show');
+      document.getElementById('success-message').classList.remove('show');
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      clearMessages();
+
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const loginBtn = document.getElementById('login-btn');
+      const loginLoading = document.getElementById('login-loading');
+
+      loginBtn.disabled = true;
+      loginLoading.classList.add('show');
+
+      try {
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+        showSuccess('✅ Login realizado com sucesso!');
+        
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
+      } catch (error) {
+        let message = 'Erro ao fazer login';
+        
+        if (error.code === 'auth/user-not-found') {
+          message = 'Email não encontrado';
+        } else if (error.code === 'auth/wrong-password') {
+          message = 'Senha incorreta';
+        } else if (error.code === 'auth/invalid-email') {
+          message = 'Email inválido';
+        }
+        
+        showError(message);
+      } finally {
+        loginBtn.disabled = false;
+        loginLoading.classList.remove('show');
+      }
+    }
+
+    async function handleRegister(event) {
+      event.preventDefault();
+      clearMessages();
+
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const passwordConfirm = document.getElementById('register-password-confirm').value;
+      const registerBtn = document.getElementById('register-btn');
+      const registerLoading = document.getElementById('register-loading');
+
+      if (password !== passwordConfirm) {
+        showError('As senhas não coincidem');
+        return;
+      }
+
+      registerBtn.disabled = true;
+      registerLoading.classList.add('show');
+
+      try {
+        await firebase.auth().createUserWithEmailAndPassword(email, password);
+        showSuccess('✅ Conta criada com sucesso!');
+        
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1500);
+      } catch (error) {
+        let message = 'Erro ao criar conta';
+        
+        if (error.code === 'auth/email-already-in-use') {
+          message = 'Email já está em uso';
+        } else if (error.code === 'auth/weak-password') {
+          message = 'Senha muito fraca';
+        } else if (error.code === 'auth/invalid-email') {
+          message = 'Email inválido';
+        }
+        
+        showError(message);
+      } finally {
+        registerBtn.disabled = false;
+        registerLoading.classList.remove('show');
+      }
+    }
+
+    // Verificar se usuário já está logado
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+</body>
+</html>
