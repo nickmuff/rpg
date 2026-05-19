@@ -7,9 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
 </head>
 <body class="bg-zinc-950 text-zinc-100">
 
@@ -25,10 +22,10 @@
         <a onclick="showSection('world')" class="nav-link cursor-pointer">O Mundo</a>
         <a onclick="showSection('rules')" class="nav-link cursor-pointer">Regras</a>
         <a onclick="showSection('creation-info')" class="nav-link cursor-pointer">Criar Personagem</a>
-        <a id="nav-exclusive" onclick="showSection('exclusive-content')" class="nav-link cursor-pointer hidden">Exclusivo</a>
-        <a id="nav-guild" onclick="showSection('guild-panel')" class="nav-link cursor-pointer hidden">Guilda</a>
       </div>
-      <div id="user-panel" class="text-sm flex items-center gap-4"></div>
+      <div id="user-panel" class="text-sm flex items-center gap-4">
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition text-sm">🚪 Sair</button>
+      </div>
     </div>
   </nav>
 
@@ -42,10 +39,10 @@
                 class="bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-2xl px-12 py-6 rounded-3xl transition">
           Explorar o Mundo
         </button>
-        <a href="login.html" 
-           class="bg-amber-600 hover:bg-amber-500 text-black font-bold text-2xl px-12 py-6 rounded-3xl transition inline-block">
-          🚪 Fazer Login
-        </a>
+        <button onclick="goToCreator()" 
+                class="bg-amber-600 hover:bg-amber-500 text-black font-bold text-2xl px-12 py-6 rounded-3xl transition">
+          ⚔️ Criar Personagem
+        </button>
       </div>
     </div>
   </section>
@@ -104,682 +101,154 @@
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="border-b border-emerald-700">
-                  <th class="px-4 py-3 text-emerald-400">Atributo</th>
-                  <th class="px-4 py-3 text-emerald-400">Derivado</th>
-                  <th class="px-4 py-3 text-emerald-400">Fórmula</th>
+                  <th class="p-3 text-emerald-400">Atributo</th>
+                  <th class="p-3 text-emerald-400">Descrição</th>
+                  <th class="p-3 text-emerald-400">Derivado</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="border-b border-zinc-800">
-                  <td class="px-4 py-3 font-bold">FOR</td>
-                  <td class="px-4 py-3">Força Física</td>
-                  <td class="px-4 py-3">PV = 8 + (FOR × 2)</td>
+                <tr class="border-b border-zinc-800 hover:bg-zinc-900">
+                  <td class="p-3 font-bold text-emerald-300">FOR (Força)</td>
+                  <td class="p-3">Poder físico e resistência</td>
+                  <td class="p-3">+2 PV por ponto</td>
                 </tr>
-                <tr class="border-b border-zinc-800">
-                  <td class="px-4 py-3 font-bold">MAG</td>
-                  <td class="px-4 py-3">Magia</td>
-                  <td class="px-4 py-3">Mana = 4 + (MAG × 2)</td>
+                <tr class="border-b border-zinc-800 hover:bg-zinc-900">
+                  <td class="p-3 font-bold text-emerald-300">AGI (Agilidade)</td>
+                  <td class="p-3">Velocidade e reflexos</td>
+                  <td class="p-3">+1 Defesa por ponto</td>
                 </tr>
-                <tr class="border-b border-zinc-800">
-                  <td class="px-4 py-3 font-bold">ESP</td>
-                  <td class="px-4 py-3">Vontade / Sanidade</td>
-                  <td class="px-4 py-3">Sanidade = 8 + (ESP × 2)</td>
+                <tr class="border-b border-zinc-800 hover:bg-zinc-900">
+                  <td class="p-3 font-bold text-emerald-300">INT (Inteligência)</td>
+                  <td class="p-3">Raciocínio e conhecimento</td>
+                  <td class="p-3">+1 Perícia por ponto</td>
                 </tr>
-                <tr class="border-b border-zinc-800">
-                  <td class="px-4 py-3 font-bold">AGI</td>
-                  <td class="px-4 py-3">Agilidade</td>
-                  <td class="px-4 py-3">Defesa = 10 + AGI | Movimento = 3 + AGI</td>
+                <tr class="border-b border-zinc-800 hover:bg-zinc-900">
+                  <td class="p-3 font-bold text-emerald-300">MAG (Magia)</td>
+                  <td class="p-3">Poder arcano</td>
+                  <td class="p-3">+2 Mana por ponto</td>
                 </tr>
-                <tr>
-                  <td class="px-4 py-3 font-bold">INT</td>
-                  <td class="px-4 py-3">Inteligência</td>
-                  <td class="px-4 py-3">—</td>
+                <tr class="border-b border-zinc-800 hover:bg-zinc-900">
+                  <td class="p-3 font-bold text-emerald-300">ESP (Espírito)</td>
+                  <td class="p-3">Vontade e percepção</td>
+                  <td class="p-3">+2 Sanidade por ponto</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="mt-4 p-4 bg-zinc-800 rounded-lg">
-            <p><strong class="text-emerald-300">Resistência Física:</strong> ESP (subtrai de dano físico)</p>
-            <p><strong class="text-emerald-300">Resistência Mágica:</strong> MAG (subtrai de dano mágico)</p>
-            <p><strong class="text-emerald-300">Testes:</strong> 1d20 + Atributo + Bônus de Perícia</p>
-            <p><strong class="text-emerald-300">DT padrão:</strong> Fácil 10 | Médio 13 | Difícil 16 | Épico 20</p>
-          </div>
         </div>
 
-        <!-- Perícias -->
+        <!-- Derivados -->
         <div>
-          <h3 class="text-3xl font-bold text-emerald-300 mb-6">🎯 Perícias</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="text-emerald-400 font-bold">Treinada: +2</p>
-              <p class="text-zinc-300">Você tem experiência com esta perícia</p>
+          <h3 class="text-3xl font-bold text-emerald-300 mb-6">⚡ Valores Derivados</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-zinc-900 p-6 rounded-lg border border-emerald-700">
+              <p class="font-bold text-emerald-400 mb-2">Pontos de Vida (PV)</p>
+              <p class="text-zinc-300">8 + (FOR × 2)</p>
             </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="text-emerald-400 font-bold">Especialista: +4</p>
-              <p class="text-zinc-300">Você domina esta perícia completamente</p>
+            <div class="bg-zinc-900 p-6 rounded-lg border border-emerald-700">
+              <p class="font-bold text-emerald-400 mb-2">Mana</p>
+              <p class="text-zinc-300">4 + (MAG × 2)</p>
             </div>
-          </div>
-        </div>
-
-        <!-- Combate -->
-        <div>
-          <h3 class="text-3xl font-bold text-emerald-300 mb-6">⚔️ Combate Dinâmico</h3>
-          <div class="space-y-4">
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Iniciativa:</p>
-              <p>1 rolagem por grupo (1d20 + AGI mais alto)</p>
+            <div class="bg-zinc-900 p-6 rounded-lg border border-emerald-700">
+              <p class="font-bold text-emerald-400 mb-2">Sanidade</p>
+              <p class="text-zinc-300">8 + (ESP × 2)</p>
             </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Turno do Jogador:</p>
-              <ul class="list-decimal list-inside space-y-1">
-                <li>Mover</li>
-                <li>1 Ação Principal (atacar, usar Carta/Poder, item, interagir)</li>
-                <li>1 Ação Bônus ou gastar Momentum</li>
-              </ul>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Momentum (0–3):</p>
-              <p>+1 por acerto. Gaste 1 para: +1d6 dano, ação bônus extra, dobrar seu movimento</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Reações (1 por rodada):</p>
-              <p>Defender (–5 dano), Contra-atacar, esquivar</p>
+            <div class="bg-zinc-900 p-6 rounded-lg border border-emerald-700">
+              <p class="font-bold text-emerald-400 mb-2">Defesa</p>
+              <p class="text-zinc-300">10 + AGI</p>
             </div>
           </div>
-        </div>
-
-        <!-- Regras Básicas -->
-        <div>
-          <h3 class="text-3xl font-bold text-emerald-300 mb-6">⚙️ Regras Básicas</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="p-4 bg-zinc-800 rounded-lg text-center">
-              <p class="text-2xl font-bold text-red-400">1</p>
-              <p class="text-emerald-300">Desastre</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg text-center">
-              <p class="text-2xl font-bold text-emerald-400">2-19</p>
-              <p class="text-emerald-300">Resultado Normal</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg text-center">
-              <p class="text-2xl font-bold text-yellow-400">20</p>
-              <p class="text-emerald-300">Sucesso Crítico</p>
-            </div>
-          </div>
-          <div class="mt-4 p-4 bg-zinc-800 rounded-lg">
-            <p><strong class="text-emerald-300">Vantagem:</strong> 2d20 (pega o melhor)</p>
-            <p><strong class="text-emerald-300">Desvantagem:</strong> 2d20 (pega o pior)</p>
-            <p><strong class="text-emerald-300">Narração:</strong> Sempre narrar a ação antes dos dados</p>
-          </div>
-        </div>
-
-        <!-- Morte e Reanimação -->
-        <div>
-          <h3 class="text-3xl font-bold text-emerald-300 mb-6">☠️ Sistema de Morte e Reanimação</h3>
-          <div class="space-y-4">
-            <p class="text-zinc-300">Quando um personagem reduz seus Pontos Vitais (PV) a zero, ele entra em um estado crítico chamado <strong class="text-emerald-400">"Morrendo"</strong>. Neste estado, o personagem fica completamente incapacitado e não pode realizar qualquer ação.</p>
-            
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400 mb-2">O Processo de Salvação</p>
-              <p class="text-sm text-zinc-300 mb-3">Seus companheiros têm a oportunidade de salvá-lo através de sucessivos testes de resgate. Objetivo: obter <strong>3 sucessos antes de acumular 3 falhas</strong></p>
-              <p class="text-sm"><strong class="text-emerald-300">Teste Básico:</strong> 1d20 + INT (Sucesso: 17+)</p>
-              <p class="text-sm"><strong class="text-emerald-300">Com Assistência Médica:</strong> 1d20 + INT (Sucesso: 13+)</p>
-            </div>
-
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400 mb-2">Último Esforço</p>
-              <p class="text-sm text-zinc-300">Se falharem 3 vezes, o personagem caído rola 1d20 + ESP. Se passar de DT 17, ganha 3 novas chances para seus aliados salvarem. Se falhar, morre permanentemente.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Resistência -->
-        <div>
-          <h3 class="text-3xl font-bold text-emerald-300 mb-6">🛡️ Resistência e Sistema de Danos</h3>
-          <p class="text-zinc-300 mb-4">Cada arma causa um tipo específico de dano, e cada armadura oferece resistência a certos tipos. Quando você sofre um ataque, o dano é reduzido com base na sua resistência àquele tipo específico de dano.</p>
-          <p class="text-sm text-emerald-400 mb-4"><strong>Fórmula:</strong> Dano Final = Dano do Ataque - Resistência do Personagem</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Cortante</p>
-              <p class="text-sm text-zinc-400">Espadas, facas, machados</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Perfurante</p>
-              <p class="text-sm text-zinc-400">Lanças, flechas, punhais</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Impacto</p>
-              <p class="text-sm text-zinc-400">Maços, martelos, socos</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Fogo</p>
-              <p class="text-sm text-zinc-400">Magias de fogo, poções</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Frio</p>
-              <p class="text-sm text-zinc-400">Magias de gelo, veneno</p>
-            </div>
-            <div class="p-4 bg-zinc-800 rounded-lg">
-              <p class="font-bold text-emerald-400">Mental</p>
-              <p class="text-sm text-zinc-400">Magias mentais, horrores</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sanidade -->
-        <div>
-          <h3 class="text-3xl font-bold text-emerald-300 mb-6">🧠 Sistema de Sanidade</h3>
-          <p class="text-zinc-300 mb-4">A sanidade representa a estabilidade mental e emocional do seu personagem. Exposição a horrores, mortes traumáticas e eventos sobrenaturais podem abalar profundamente a mente de um aventureiro.</p>
-          
-          <div class="p-4 bg-zinc-800 rounded-lg mb-4">
-            <p class="font-bold text-emerald-400 mb-2">Teste de Resistência Mental</p>
-            <p class="text-sm text-zinc-300 mb-2"><strong>Rolagem:</strong> 1d20 + ESP</p>
-            <p class="text-sm text-zinc-300"><strong>Se Passar:</strong> Sofre metade do dano de sanidade</p>
-            <p class="text-sm text-zinc-300"><strong>Se Falhar:</strong> Sofre o dano completo</p>
-          </div>
-
-          <p class="text-sm font-bold text-emerald-400 mb-2">Consequências da Sanidade Baixa:</p>
-          <div class="space-y-2 text-sm">
-            <div class="p-3 bg-zinc-800 rounded"><strong class="text-emerald-300">75-100%:</strong> Nenhum efeito</div>
-            <div class="p-3 bg-zinc-800 rounded"><strong class="text-emerald-300">50-74%:</strong> Desvantagem em testes sociais</div>
-            <div class="p-3 bg-zinc-800 rounded"><strong class="text-emerald-300">25-49%:</strong> Desvantagem em percepção e investigação</div>
-            <div class="p-3 bg-zinc-800 rounded"><strong class="text-emerald-300">10-24%:</strong> Desvantagem em todos os testes</div>
-            <div class="p-3 bg-zinc-800 rounded"><strong class="text-emerald-300">0%:</strong> Colapso mental - incapacitado</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CRIAÇÃO DE PERSONAGEM - INFO -->
-  <section id="creation-info" class="hidden py-24 bg-zinc-900">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-5xl font-bold text-center mb-12 text-emerald-400">Como Criar seu Personagem</h2>
-      
-      <div class="space-y-12">
-        <!-- Passo a Passo -->
-        <div class="bg-zinc-800 rounded-lg p-8">
-          <h3 class="text-2xl font-bold text-emerald-300 mb-6">📋 Passo a Passo (15 minutos)</h3>
-          <ol class="space-y-4">
-            <li class="flex gap-4">
-              <span class="text-emerald-400 font-bold text-xl">1.</span>
-              <div>
-                <p class="font-bold">Escolha 1 Raça</p>
-                <p class="text-zinc-400">Cada raça oferece bônus únicos e habilidades especiais</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <span class="text-emerald-400 font-bold text-xl">2.</span>
-              <div>
-                <p class="font-bold">Distribua 6 Pontos nos Atributos</p>
-                <p class="text-zinc-400">Todos começam em 0. Máximo +4, mínimo -2</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <span class="text-emerald-400 font-bold text-xl">3.</span>
-              <div>
-                <p class="font-bold">Escolha 1 Profissão</p>
-                <p class="text-zinc-400">Define suas perícias iniciais e bônus temático</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <span class="text-emerald-400 font-bold text-xl">4.</span>
-              <div>
-                <p class="font-bold">Escolha 2 Perícias Livres</p>
-                <p class="text-zinc-400">Estas se tornam Treinadas (+2)</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <span class="text-emerald-400 font-bold text-xl">5.</span>
-              <div>
-                <p class="font-bold">Escolha 1 Perícia Especialista</p>
-                <p class="text-zinc-400">Entre todas que você tem Treinadas, escolha uma para ser Especialista (+4)</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <span class="text-emerald-400 font-bold text-xl">6.</span>
-              <div>
-                <p class="font-bold">Escolha Itens Iniciais</p>
-                <p class="text-zinc-400">Você tem 8 pontos para gastar em equipamento</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <span class="text-emerald-400 font-bold text-xl">7.</span>
-              <div>
-                <p class="font-bold">Role 1 Baú Rank 1</p>
-                <p class="text-zinc-400">Ou escolha 1 item da lista Rank 1</p>
-              </div>
-            </li>
-          </ol>
-        </div>
-
-        <!-- Raças -->
-        <div>
-          <h3 class="text-2xl font-bold text-emerald-300 mb-6">🌍 Raças Disponíveis</h3>
-          <div id="races-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </div>
-
-        <!-- Profissões -->
-        <div>
-          <h3 class="text-2xl font-bold text-emerald-300 mb-6">🛠️ Profissões Disponíveis</h3>
-          <div id="professions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </div>
-
-        <!-- Botão para Criar -->
-        <div class="text-center">
-          <button onclick="goToCreator()" 
-                  class="bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-2xl px-12 py-6 rounded-3xl transition">
-            ✨ Criar Meu Personagem
-          </button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CRIADOR DE PERSONAGEM -->
-  <section id="creator" class="hidden min-h-screen py-24 bg-black">
-    <div class="max-w-7xl mx-auto px-6 pt-20">
-      <h1 class="text-4xl font-bold mb-10 text-emerald-400">Criação de Personagem</h1>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
-        <!-- Formulário -->
-        <div class="lg:col-span-2 space-y-8">
-          
-          <!-- Nome -->
-          <div>
-            <label class="block text-sm font-bold text-emerald-300 mb-2">Nome do Personagem</label>
-            <input id="char-name" type="text" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-6 py-3 text-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Ex: Thalor Shadowblade">
-          </div>
-
-          <!-- Raça e Profissão -->
-          <div class="grid grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-bold text-emerald-300 mb-2">Raça</label>
-              <select id="char-race" onchange="updatePreview()" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-6 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <option value="">Selecione uma raça...</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-emerald-300 mb-2">Profissão</label>
-              <select id="char-prof" onchange="updatePreview()" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-6 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <option value="">Selecione uma profissão...</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Atributos -->
-          <div>
-            <label class="block text-sm font-bold text-emerald-300 mb-4">Distribua 6 Pontos nos Atributos</label>
-            <div class="grid grid-cols-5 gap-4" id="attributes-grid"></div>
-            <p id="points-remaining" class="text-center mt-6 text-emerald-400 font-bold">Pontos restantes: <strong>6</strong></p>
-          </div>
-
-          <!-- Perícias Livres -->
-          <div>
-            <label class="block text-sm font-bold text-emerald-300 mb-2">Escolha 2 Perícias Livres</label>
-            <div class="grid grid-cols-2 gap-4" id="free-skills-grid"></div>
-          </div>
-
-          <!-- Perícia Especialista -->
-          <div>
-            <label class="block text-sm font-bold text-emerald-300 mb-2">Escolha 1 Perícia para ser Especialista (+4)</label>
-            <select id="specialist-skill" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-6 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              <option value="">Selecione uma perícia...</option>
-            </select>
-          </div>
-
-          <!-- Itens Iniciais -->
-          <div>
-            <label class="block text-sm font-bold text-emerald-300 mb-2">Escolha Itens Iniciais (8 Pontos)</label>
-            <p class="text-xs text-zinc-400 mb-4">Máximo 1 item de custo 4. Clique para expandir categorias.</p>
-            <div id="items-grid" class="space-y-3"></div>
-            <p id="items-remaining" class="text-center mt-4 text-emerald-400 font-bold">Pontos restantes: <strong>8</strong></p>
-          </div>
-
-          <!-- Informações Adicionais -->
-          <div class="grid grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-bold text-emerald-300 mb-2">Idade</label>
-              <input id="char-age" type="number" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-6 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Ex: 25">
-            </div>
-            <div>
-              <label class="block text-sm font-bold text-emerald-300 mb-2">Aparência / Roupas</label>
-              <input id="char-appearance" type="text" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-6 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Ex: Cabelo preto, cicatriz no rosto">
-            </div>
-          </div>
-
-          <!-- História -->
-          <div>
-            <label class="block text-sm font-bold text-emerald-300 mb-2">História do Personagem</label>
-            <textarea id="char-story" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-6 py-3 h-32 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Conte a história do seu personagem..."></textarea>
-          </div>
-
-          <!-- Botão Salvar -->
-          <button onclick="saveCharacter()" class="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-black font-bold text-xl py-4 rounded-lg transition">
-            💾 SALVAR PERSONAGEM
-          </button>
-        </div>
-
-        <!-- Preview -->
-        <div class="lg:col-span-1">
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-8 sticky top-32" id="preview-card">
-            <h3 class="text-2xl font-bold mb-6 text-center text-emerald-400">Visualização da Ficha</h3>
-            <div id="preview-content" class="min-h-[500px] space-y-4">
-              <p class="text-zinc-400 text-center">Preencha os dados para ver a visualização</p>
-            </div>
-            <button onclick="downloadCharacterSheet()" class="w-full bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 rounded-lg mt-6 transition">
-              📥 Baixar Ficha
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FICHA DO PERSONAGEM (ESTILO C.R.I.S) -->
-  <section id="character-sheet" class="hidden min-h-screen py-24 bg-black">
-    <div class="max-w-7xl mx-auto px-6 pt-20">
-      <h1 class="text-4xl font-bold mb-10 text-emerald-400">Ficha do Personagem</h1>
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        <!-- Coluna Esquerda - Foto e Info Básica -->
-        <div class="lg:col-span-1 space-y-6">
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <div class="w-full h-64 bg-zinc-800 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-              <img id="char-photo" src="https://via.placeholder.com/300x400?text=Foto+do+Personagem" alt="Foto" class="w-full h-full object-cover">
-            </div>
-            <label class="block text-sm font-bold text-emerald-300 mb-2">Adicionar Foto</label>
-            <input type="file" id="photo-upload" accept="image/*" onchange="uploadCharacterPhoto(event)" class="w-full text-xs">
-          </div>
-
-          <!-- Atributos Principais -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Atributos</h3>
-            <div class="space-y-3">
-              <div class="flex justify-between items-center p-3 bg-zinc-800 rounded">
-                <span class="text-emerald-300">FOR</span>
-                <span id="sheet-for" class="font-bold text-xl">0</span>
-              </div>
-              <div class="flex justify-between items-center p-3 bg-zinc-800 rounded">
-                <span class="text-emerald-300">AGI</span>
-                <span id="sheet-agi" class="font-bold text-xl">0</span>
-              </div>
-              <div class="flex justify-between items-center p-3 bg-zinc-800 rounded">
-                <span class="text-emerald-300">INT</span>
-                <span id="sheet-int" class="font-bold text-xl">0</span>
-              </div>
-              <div class="flex justify-between items-center p-3 bg-zinc-800 rounded">
-                <span class="text-emerald-300">MAG</span>
-                <span id="sheet-mag" class="font-bold text-xl">0</span>
-              </div>
-              <div class="flex justify-between items-center p-3 bg-zinc-800 rounded">
-                <span class="text-emerald-300">ESP</span>
-                <span id="sheet-esp" class="font-bold text-xl">0</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Coluna Central - Informações Principais -->
-        <div class="lg:col-span-2 space-y-6">
-          <!-- Info Básica -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Informações Básicas</h3>
-            <div class="space-y-4">
-              <div>
-                <label class="text-xs text-emerald-300 font-bold">Nome</label>
-                <p id="sheet-name" class="text-2xl font-bold text-emerald-300">—</p>
-              </div>
-              <div class="grid grid-cols-3 gap-4">
-                <div>
-                  <label class="text-xs text-emerald-300 font-bold">Raça</label>
-                  <p id="sheet-race" class="text-sm">—</p>
-                </div>
-                <div>
-                  <label class="text-xs text-emerald-300 font-bold">Profissão</label>
-                  <p id="sheet-prof" class="text-sm">—</p>
-                </div>
-                <div>
-                  <label class="text-xs text-emerald-300 font-bold">Idade</label>
-                  <p id="sheet-age" class="text-sm">—</p>
-                </div>
-              </div>
-              <div>
-                <label class="text-xs text-emerald-300 font-bold">Aparência</label>
-                <p id="sheet-appearance" class="text-sm text-zinc-300">—</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Derivados Principais -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Derivados</h3>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="p-4 bg-zinc-800 rounded-lg text-center">
-                <p class="text-xs text-zinc-400">PV</p>
-                <p id="sheet-pv" class="text-3xl font-bold text-red-400">0</p>
-              </div>
-              <div class="p-4 bg-zinc-800 rounded-lg text-center">
-                <p class="text-xs text-zinc-400">Mana</p>
-                <p id="sheet-mana" class="text-3xl font-bold text-blue-400">0</p>
-              </div>
-              <div class="p-4 bg-zinc-800 rounded-lg text-center">
-                <p class="text-xs text-zinc-400">Sanidade</p>
-                <p id="sheet-sanity" class="text-3xl font-bold text-purple-400">0</p>
-              </div>
-              <div class="p-4 bg-zinc-800 rounded-lg text-center">
-                <p class="text-xs text-zinc-400">Defesa</p>
-                <p id="sheet-def" class="text-3xl font-bold text-emerald-400">0</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- História -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">História</h3>
-            <div id="sheet-story" class="text-sm text-zinc-300 bg-zinc-800 p-4 rounded-lg min-h-[100px]">
-              —
-            </div>
-          </div>
-        </div>
-
-        <!-- Coluna Direita - Perícias e Inventário -->
-        <div class="lg:col-span-1 space-y-6">
-          <!-- Perícias -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Perícias</h3>
-            <div class="space-y-2">
-              <div class="p-2 bg-zinc-800 rounded">
-                <p class="text-xs text-zinc-400">Livres</p>
-                <div id="sheet-free-skills" class="text-xs text-emerald-300">—</div>
-              </div>
-              <div class="p-2 bg-zinc-800 rounded">
-                <p class="text-xs text-zinc-400">Especialista</p>
-                <div id="sheet-specialist" class="text-xs text-amber-400">—</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Inventário -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Inventário</h3>
-            <div id="sheet-inventory" class="space-y-2 text-xs">
-              <p class="text-zinc-400">—</p>
-            </div>
-            <div class="mt-4 p-3 bg-zinc-800 rounded-lg">
-              <p class="text-xs text-zinc-400">Peso</p>
-              <p id="sheet-weight" class="text-lg font-bold text-emerald-400">0 / 0</p>
-            </div>
-          </div>
-
-          <!-- Anotações -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Anotações</h3>
-            <textarea id="sheet-notes" placeholder="Suas anotações aqui..." class="w-full bg-zinc-800 border border-emerald-700 rounded-lg p-3 text-xs h-24 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTEÚDO EXCLUSIVO -->
-  <section id="exclusive-content" class="hidden min-h-screen py-24 bg-black">
-    <div class="max-w-7xl mx-auto px-6 pt-20">
-      <h1 class="text-4xl font-bold mb-10 text-emerald-400">Conteúdo Exclusivo</h1>
-      <div id="exclusive-content-container" class="space-y-8">
-        <p class="text-zinc-400">Você não tem acesso a conteúdo exclusivo no momento.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- PAINEL DA GUILDA -->
-  <section id="guild-panel" class="hidden min-h-screen py-24 bg-black">
-    <div class="max-w-7xl mx-auto px-6 pt-20">
-      <h1 class="text-4xl font-bold mb-10 text-emerald-400">⚔️ Painel da Guilda</h1>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Informações da Guilda -->
-        <div class="lg:col-span-1 space-y-6">
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Informações da Guilda</h3>
-            <div class="space-y-3">
-              <div>
-                <p class="text-xs text-zinc-400">Nome</p>
-                <p id="guild-name" class="font-bold text-emerald-300">—</p>
-              </div>
-              <div>
-                <p class="text-xs text-zinc-400">Líder</p>
-                <p id="guild-leader" class="font-bold text-emerald-300">—</p>
-              </div>
-              <div>
-                <p class="text-xs text-zinc-400">Membros</p>
-                <p id="guild-members-count" class="font-bold text-emerald-300">0</p>
-              </div>
-              <div>
-                <p class="text-xs text-zinc-400">Nível</p>
-                <p id="guild-level" class="font-bold text-amber-400">1</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Árvore de Power-ups -->
-        <div class="lg:col-span-2">
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-            <h3 class="text-lg font-bold text-emerald-400 mb-6">🌳 Árvore de Power-ups da Guilda</h3>
-            <div id="guild-powerups-tree" class="space-y-4">
-              <p class="text-zinc-400">Carregando árvore de power-ups...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Membros da Guilda -->
-      <div class="mt-8 bg-zinc-900 border border-emerald-700 rounded-lg p-6">
-        <h3 class="text-lg font-bold text-emerald-400 mb-6">👥 Membros da Guilda</h3>
-        <div id="guild-members-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <p class="text-zinc-400">Carregando membros...</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PAINEL DO MESTRE -->
-  <section id="master-panel" class="hidden min-h-screen py-24 bg-black">
-    <div class="max-w-7xl mx-auto px-6 pt-20">
-      <h1 class="text-4xl font-bold mb-10 text-emerald-400">Painel do Mestre</h1>
+  <section id="creation-info" class="hidden py-24 bg-zinc-900">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-5xl font-bold text-center mb-12 text-emerald-400">Como Criar um Personagem</h2>
       
       <div class="space-y-8">
-        <!-- Abas do Painel -->
-        <div class="flex gap-4 border-b border-emerald-700 pb-4">
-          <button onclick="showMasterTab('characters')" class="px-6 py-3 bg-emerald-700 text-black font-bold rounded-t-lg">Personagens</button>
-          <button onclick="showMasterTab('roles')" class="px-6 py-3 bg-zinc-800 text-emerald-400 font-bold rounded-t-lg hover:bg-zinc-700">Papéis & Permissões</button>
-          <button onclick="showMasterTab('guild')" class="px-6 py-3 bg-zinc-800 text-emerald-400 font-bold rounded-t-lg hover:bg-zinc-700">Guilda</button>
+        <div class="bg-zinc-800 p-8 rounded-lg border border-emerald-700">
+          <h3 class="text-2xl font-bold text-emerald-300 mb-4">📋 Passo 1: Informações Básicas</h3>
+          <p class="text-zinc-300">Escolha um nome épico para seu personagem, sua idade e aparência física.</p>
         </div>
 
-        <!-- Aba: Personagens -->
-        <div id="master-tab-characters" class="space-y-6">
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-8">
-            <h2 class="text-2xl font-bold text-emerald-300 mb-6">Todos os Personagens</h2>
-            <div id="all-characters-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <p class="text-zinc-400">Carregando personagens...</p>
-            </div>
-          </div>
+        <div class="bg-zinc-800 p-8 rounded-lg border border-emerald-700">
+          <h3 class="text-2xl font-bold text-emerald-300 mb-4">🧬 Passo 2: Raça</h3>
+          <p class="text-zinc-300">Selecione sua raça. Cada uma oferece bônus únicos e habilidades especiais.</p>
         </div>
 
-        <!-- Aba: Papéis & Permissões -->
-        <div id="master-tab-roles" class="hidden space-y-6">
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-8">
-            <h2 class="text-2xl font-bold text-emerald-300 mb-6">Gerenciar Papéis e Permissões</h2>
-            
-            <!-- Criar Novo Papel -->
-            <div class="mb-8 p-6 bg-zinc-800 rounded-lg">
-              <h3 class="text-lg font-bold text-emerald-400 mb-4">Criar Novo Papel</h3>
-              <div class="space-y-4">
-                <input type="text" id="new-role-name" placeholder="Nome do papel (ex: Líder da Guilda)" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-4 py-2 text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                <textarea id="new-role-description" placeholder="Descrição do papel..." class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-4 py-2 text-emerald-300 h-20 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-                <button onclick="createRole()" class="bg-emerald-600 hover:bg-emerald-500 text-black font-bold py-2 px-6 rounded-lg transition">+ Criar Papel</button>
-              </div>
-            </div>
-
-            <!-- Lista de Papéis -->
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Papéis Existentes</h3>
-            <div id="roles-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <p class="text-zinc-400">Carregando papéis...</p>
-            </div>
-          </div>
-
-          <!-- Atribuir Papéis aos Jogadores -->
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-8">
-            <h2 class="text-2xl font-bold text-emerald-300 mb-6">Atribuir Papéis aos Jogadores</h2>
-            <div id="assign-roles-container" class="space-y-4">
-              <p class="text-zinc-400">Carregando jogadores...</p>
-            </div>
-          </div>
+        <div class="bg-zinc-800 p-8 rounded-lg border border-emerald-700">
+          <h3 class="text-2xl font-bold text-emerald-300 mb-4">💼 Passo 3: Profissão</h3>
+          <p class="text-zinc-300">Escolha sua profissão que define suas perícias iniciais e bônus de combate.</p>
         </div>
 
-        <!-- Aba: Guilda -->
-        <div id="master-tab-guild" class="hidden space-y-6">
-          <div class="bg-zinc-900 border border-emerald-700 rounded-lg p-8">
-            <h2 class="text-2xl font-bold text-emerald-300 mb-6">Gerenciar Guilda</h2>
-            
-            <!-- Informações da Guilda -->
-            <div class="p-6 bg-zinc-800 rounded-lg mb-6">
-              <h3 class="text-lg font-bold text-emerald-400 mb-4">Informações da Guilda</h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="text-sm text-emerald-300 font-bold">Nome da Guilda</label>
-                  <input type="text" id="guild-name-input" placeholder="Nome da guilda" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-4 py-2 text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                </div>
-                <div>
-                  <label class="text-sm text-emerald-300 font-bold">Líder da Guilda</label>
-                  <select id="guild-leader-select" class="w-full bg-zinc-900 border border-emerald-700 rounded-lg px-4 py-2 text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option value="">Selecione um líder...</option>
-                  </select>
-                </div>
-                <button onclick="saveGuildInfo()" class="bg-emerald-600 hover:bg-emerald-500 text-black font-bold py-2 px-6 rounded-lg transition">Salvar Informações</button>
-              </div>
-            </div>
-
-            <!-- Árvore de Power-ups -->
-            <h3 class="text-lg font-bold text-emerald-400 mb-4">Gerenciar Árvore de Power-ups</h3>
-            <div id="powerups-manager" class="space-y-4">
-              <p class="text-zinc-400">Carregando power-ups...</p>
-            </div>
-          </div>
+        <div class="bg-zinc-800 p-8 rounded-lg border border-emerald-700">
+          <h3 class="text-2xl font-bold text-emerald-300 mb-4">📊 Passo 4: Atributos</h3>
+          <p class="text-zinc-300">Distribua 6 pontos entre os 5 atributos (FOR, AGI, INT, MAG, ESP).</p>
         </div>
+
+        <div class="bg-zinc-800 p-8 rounded-lg border border-emerald-700">
+          <h3 class="text-2xl font-bold text-emerald-300 mb-4">🎯 Passo 5: Perícias</h3>
+          <p class="text-zinc-300">Escolha 2 perícias livres e 1 perícia especialista.</p>
+        </div>
+
+        <div class="bg-zinc-800 p-8 rounded-lg border border-emerald-700">
+          <h3 class="text-2xl font-bold text-emerald-300 mb-4">🎁 Passo 6: Itens Iniciais</h3>
+          <p class="text-zinc-300">Gaste 8 pontos em itens para começar sua aventura bem equipado.</p>
+        </div>
+
+        <button onclick="goToCreator()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold py-4 px-8 rounded-lg transition text-xl mt-8">
+          ⚔️ Começar Criação de Personagem
+        </button>
       </div>
     </div>
   </section>
 
-  <script src="firebase-config.js"></script>
+  <!-- CRIADOR (HIDDEN) -->
+  <section id="creator" class="hidden py-24 bg-black">
+    <div class="max-w-6xl mx-auto px-6 pt-20">
+      <h2 class="text-5xl font-bold text-center mb-12 text-emerald-400">Criar Personagem</h2>
+      <p class="text-center text-zinc-400 text-lg">Sistema de criação de personagem será implementado aqui.</p>
+    </div>
+  </section>
+
   <script>
-    // Verificar autenticação antes de carregar a página
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) {
+    // Verificar autenticação
+    window.addEventListener('load', () => {
+      const isLogged = localStorage.getItem('nectoflora_logged');
+      if (isLogged !== 'true') {
         window.location.href = 'login.html';
       }
     });
+
+    function showSection(sectionId) {
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function goHome() {
+      showSection('home');
+    }
+
+    function goToCreator() {
+      showSection('creator');
+    }
+
+    function logout() {
+      localStorage.removeItem('nectoflora_logged');
+      localStorage.removeItem('nectoflora_username');
+      window.location.href = 'login.html';
+    }
+
+    // Mostrar home ao carregar
+    window.addEventListener('load', () => {
+      showSection('home');
+    });
   </script>
-  <script src="app.js"></script>
 </body>
 </html>
