@@ -9,6 +9,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%);
@@ -30,82 +31,59 @@
       backdrop-filter: blur(10px);
       border: 2px solid #10b981;
       border-radius: 20px;
-      padding: 50px 40px;
+      padding: 60px 40px;
       box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2);
+      text-align: center;
     }
 
     .login-header {
-      text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
     }
 
     .login-logo {
-      font-size: 60px;
-      margin-bottom: 15px;
+      font-size: 80px;
+      margin-bottom: 20px;
       animation: float 3s ease-in-out infinite;
+      display: block;
     }
 
     @keyframes float {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-15px); }
     }
 
     .login-title {
-      font-size: 32px;
+      font-size: 36px;
       font-weight: bold;
       background: linear-gradient(135deg, #10b981, #34d399);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
     }
 
     .login-subtitle {
       color: #a7f3d0;
       font-size: 14px;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
     }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-label {
-      display: block;
-      color: #a7f3d0;
-      font-weight: 600;
-      margin-bottom: 8px;
+    .login-description {
+      color: #a1a1aa;
       font-size: 14px;
+      margin-top: 30px;
+      margin-bottom: 40px;
+      line-height: 1.6;
     }
 
-    .form-input {
-      width: 100%;
-      background: #18181b;
-      border: 2px solid #27272a;
-      color: #f4f1de;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: #10b981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-      background: #1f2937;
-    }
-
-    .form-input::placeholder {
-      color: #71717a;
-    }
-
-    .btn-login {
+    .btn-google {
       width: 100%;
       background: linear-gradient(135deg, #10b981, #059669);
-      color: #000;
+      color: #fff;
       font-weight: 700;
-      padding: 14px;
+      padding: 16px;
       border: none;
       border-radius: 12px;
       font-size: 16px;
@@ -113,51 +91,107 @@
       transition: all 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
     }
 
-    .btn-login:hover {
+    .btn-google:hover {
       background: linear-gradient(135deg, #34d399, #10b981);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
     }
 
-    .btn-login:active {
-      transform: translateY(0);
+    .btn-google:active {
+      transform: translateY(-1px);
     }
 
-    .btn-login:disabled {
-      opacity: 0.5;
+    .btn-google:disabled {
+      opacity: 0.6;
       cursor: not-allowed;
       transform: none;
     }
 
-    .btn-register {
-      width: 100%;
-      background: transparent;
-      border: 2px solid #10b981;
-      color: #10b981;
-      font-weight: 700;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 10px;
+    .btn-google i {
+      font-size: 20px;
     }
 
-    .btn-register:hover {
-      background: rgba(16, 185, 129, 0.1);
-      border-color: #34d399;
-      color: #34d399;
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-size: 14px;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .success-message {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid #22c55e;
+      color: #86efac;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-size: 14px;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #a7f3d0;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid #27272a;
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .divider {
       display: flex;
       align-items: center;
-      margin: 30px 0;
+      margin: 40px 0;
     }
 
     .divider-line {
@@ -173,112 +207,21 @@
       text-transform: uppercase;
     }
 
-    .toggle-form {
-      text-align: center;
-      margin-top: 20px;
+    .footer-text {
+      color: #71717a;
+      font-size: 12px;
+      margin-top: 30px;
+      line-height: 1.6;
     }
 
-    .toggle-form a {
+    .footer-text a {
       color: #10b981;
-      cursor: pointer;
       text-decoration: none;
-      font-weight: 600;
       transition: color 0.3s ease;
     }
 
-    .toggle-form a:hover {
+    .footer-text a:hover {
       color: #34d399;
-    }
-
-    .error-message {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid #ef4444;
-      color: #fca5a5;
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .error-message.show {
-      display: block;
-      animation: slideDown 0.3s ease;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .success-message {
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid #22c55e;
-      color: #86efac;
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .success-message.show {
-      display: block;
-      animation: slideDown 0.3s ease;
-    }
-
-    .loading {
-      display: none;
-      text-align: center;
-      color: #a7f3d0;
-      font-size: 14px;
-    }
-
-    .loading.show {
-      display: block;
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #27272a;
-      border-top-color: #10b981;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin-right: 8px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .password-toggle {
-      position: relative;
-    }
-
-    .password-toggle-btn {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #a7f3d0;
-      cursor: pointer;
-      font-size: 18px;
-      transition: color 0.3s ease;
-      margin-top: 20px;
-    }
-
-    .password-toggle-btn:hover {
-      color: #10b981;
     }
 
     @media (max-width: 640px) {
@@ -287,11 +230,11 @@
       }
 
       .login-title {
-        font-size: 24px;
+        font-size: 28px;
       }
 
       .login-logo {
-        font-size: 48px;
+        font-size: 60px;
       }
     }
   </style>
@@ -301,133 +244,50 @@
     <div class="login-card">
       <!-- Header -->
       <div class="login-header">
-        <div class="login-logo">🌸</div>
+        <span class="login-logo">🌸</span>
         <div class="login-title">NECTOFLORA</div>
-        <div class="login-subtitle">RPG SYSTEM</div>
+        <div class="login-subtitle">RPG System</div>
       </div>
+
+      <!-- Descrição -->
+      <p class="login-description">
+        Bem-vindo ao mundo de Nectoflora!<br>
+        Faça login com sua conta Google para começar sua aventura.
+      </p>
 
       <!-- Mensagens -->
       <div id="error-message" class="error-message"></div>
       <div id="success-message" class="success-message"></div>
 
-      <!-- Formulário de Login -->
-      <form id="login-form" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label class="form-label">📧 Email</label>
-          <input 
-            type="email" 
-            id="login-email" 
-            class="form-input" 
-            placeholder="seu@email.com" 
-            required
-          >
-        </div>
+      <!-- Loading -->
+      <div class="loading" id="login-loading">
+        <span class="spinner"></span>
+        Autenticando...
+      </div>
 
-        <div class="form-group">
-          <label class="form-label">🔐 Senha</label>
-          <div class="password-toggle">
-            <input 
-              type="password" 
-              id="login-password" 
-              class="form-input" 
-              placeholder="••••••••" 
-              required
-            >
-            <button 
-              type="button" 
-              class="password-toggle-btn" 
-              onclick="togglePasswordVisibility('login-password')"
-            >
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
+      <!-- Botão Google -->
+      <button onclick="loginWithGoogle()" class="btn-google" id="google-btn">
+        <i class="fab fa-google"></i>
+        Entrar com Google
+      </button>
 
-        <div class="loading" id="login-loading">
-          <span class="spinner"></span>
-          Entrando...
-        </div>
-
-        <button type="submit" class="btn-login" id="login-btn">
-          ⚔️ Entrar no Jogo
-        </button>
-      </form>
-
+      <!-- Divider -->
       <div class="divider">
         <div class="divider-line"></div>
         <div class="divider-text">ou</div>
         <div class="divider-line"></div>
       </div>
 
-      <!-- Formulário de Registro -->
-      <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
-        <div class="form-group">
-          <label class="form-label">📧 Email</label>
-          <input 
-            type="email" 
-            id="register-email" 
-            class="form-input" 
-            placeholder="seu@email.com" 
-            required
-          >
-        </div>
+      <!-- Link para Home -->
+      <a href="index.html" class="block text-center text-emerald-400 hover:text-emerald-300 transition font-semibold mt-6">
+        ← Voltar para o site
+      </a>
 
-        <div class="form-group">
-          <label class="form-label">🔐 Senha</label>
-          <div class="password-toggle">
-            <input 
-              type="password" 
-              id="register-password" 
-              class="form-input" 
-              placeholder="Mínimo 6 caracteres" 
-              required
-              minlength="6"
-            >
-            <button 
-              type="button" 
-              class="password-toggle-btn" 
-              onclick="togglePasswordVisibility('register-password')"
-            >
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">🔐 Confirmar Senha</label>
-          <div class="password-toggle">
-            <input 
-              type="password" 
-              id="register-password-confirm" 
-              class="form-input" 
-              placeholder="Confirme sua senha" 
-              required
-              minlength="6"
-            >
-            <button 
-              type="button" 
-              class="password-toggle-btn" 
-              onclick="togglePasswordVisibility('register-password-confirm')"
-            >
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="loading" id="register-loading">
-          <span class="spinner"></span>
-          Criando conta...
-        </div>
-
-        <button type="submit" class="btn-login" id="register-btn">
-          ✨ Criar Conta
-        </button>
-      </form>
-
-      <!-- Toggle entre Login e Registro -->
-      <div class="toggle-form">
-        <span id="toggle-text">Não tem conta? <a onclick="toggleForms()">Registre-se</a></span>
-      </div>
+      <!-- Footer -->
+      <p class="footer-text">
+        Ao fazer login, você concorda com nossos<br>
+        <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a>
+      </p>
     </div>
   </div>
 
@@ -436,36 +296,6 @@
   
   <!-- Login Script -->
   <script>
-    function toggleForms() {
-      const loginForm = document.getElementById('login-form');
-      const registerForm = document.getElementById('register-form');
-      const toggleText = document.getElementById('toggle-text');
-
-      loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
-      registerForm.style.display = registerForm.style.display === 'none' ? 'block' : 'none';
-
-      if (loginForm.style.display === 'none') {
-        toggleText.innerHTML = 'Já tem conta? <a onclick="toggleForms()">Entrar</a>';
-      } else {
-        toggleText.innerHTML = 'Não tem conta? <a onclick="toggleForms()">Registre-se</a>';
-      }
-
-      clearMessages();
-    }
-
-    function togglePasswordVisibility(inputId) {
-      const input = document.getElementById(inputId);
-      const btn = event.target.closest('button');
-      
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
-      } else {
-        input.type = 'password';
-        btn.innerHTML = '<i class="fas fa-eye"></i>';
-      }
-    }
-
     function showError(message) {
       const errorDiv = document.getElementById('error-message');
       errorDiv.textContent = message;
@@ -477,7 +307,6 @@
       const successDiv = document.getElementById('success-message');
       successDiv.textContent = message;
       successDiv.classList.add('show');
-      setTimeout(() => successDiv.classList.remove('show'), 3000);
     }
 
     function clearMessages() {
@@ -485,22 +314,22 @@
       document.getElementById('success-message').classList.remove('show');
     }
 
-    async function handleLogin(event) {
-      event.preventDefault();
+    async function loginWithGoogle() {
       clearMessages();
-
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-      const loginBtn = document.getElementById('login-btn');
+      
+      const googleBtn = document.getElementById('google-btn');
       const loginLoading = document.getElementById('login-loading');
-
-      loginBtn.disabled = true;
+      
+      googleBtn.disabled = true;
       loginLoading.classList.add('show');
 
       try {
-        console.log('Tentando fazer login com:', email);
-        const result = await firebase.auth().signInWithEmailAndPassword(email, password);
-        console.log('Login bem-sucedido:', result);
+        console.log('Iniciando login com Google...');
+        
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const result = await firebase.auth().signInWithPopup(provider);
+        
+        console.log('Login bem-sucedido:', result.user.email);
         showSuccess('✅ Login realizado com sucesso!');
         
         setTimeout(() => {
@@ -508,68 +337,19 @@
         }, 1500);
       } catch (error) {
         console.error('Erro de login:', error);
-        let message = 'Erro ao fazer login';
+        let message = 'Erro ao fazer login com Google';
         
-        if (error.code === 'auth/user-not-found') {
-          message = 'Email não encontrado';
-        } else if (error.code === 'auth/wrong-password') {
-          message = 'Senha incorreta';
-        } else if (error.code === 'auth/invalid-email') {
-          message = 'Email inválido';
-        } else if (error.code === 'auth/invalid-credential') {
-          message = 'Email ou senha inválidos';
+        if (error.code === 'auth/popup-closed-by-user') {
+          message = 'Login cancelado';
+        } else if (error.code === 'auth/popup-blocked') {
+          message = 'Pop-up foi bloqueado. Verifique as configurações do seu navegador';
+        } else if (error.code === 'auth/cancelled-popup-request') {
+          message = 'Requisição de login cancelada';
         }
         
         showError(message);
-      } finally {
-        loginBtn.disabled = false;
+        googleBtn.disabled = false;
         loginLoading.classList.remove('show');
-      }
-    }
-
-    async function handleRegister(event) {
-      event.preventDefault();
-      clearMessages();
-
-      const email = document.getElementById('register-email').value;
-      const password = document.getElementById('register-password').value;
-      const passwordConfirm = document.getElementById('register-password-confirm').value;
-      const registerBtn = document.getElementById('register-btn');
-      const registerLoading = document.getElementById('register-loading');
-
-      if (password !== passwordConfirm) {
-        showError('As senhas não coincidem');
-        return;
-      }
-
-      registerBtn.disabled = true;
-      registerLoading.classList.add('show');
-
-      try {
-        console.log('Tentando criar conta com:', email);
-        const result = await firebase.auth().createUserWithEmailAndPassword(email, password);
-        console.log('Conta criada:', result);
-        showSuccess('✅ Conta criada com sucesso!');
-        
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1500);
-      } catch (error) {
-        console.error('Erro ao criar conta:', error);
-        let message = 'Erro ao criar conta';
-        
-        if (error.code === 'auth/email-already-in-use') {
-          message = 'Email já está em uso';
-        } else if (error.code === 'auth/weak-password') {
-          message = 'Senha muito fraca';
-        } else if (error.code === 'auth/invalid-email') {
-          message = 'Email inválido';
-        }
-        
-        showError(message);
-      } finally {
-        registerBtn.disabled = false;
-        registerLoading.classList.remove('show');
       }
     }
 
