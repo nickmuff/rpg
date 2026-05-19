@@ -6,10 +6,6 @@
   <title>Login - Nectoflora RPG</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 50%, #16213e 100%);
@@ -70,20 +66,48 @@
       text-transform: uppercase;
     }
 
-    .login-description {
-      color: #a1a1aa;
-      font-size: 14px;
-      margin-top: 30px;
-      margin-bottom: 40px;
-      line-height: 1.6;
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
     }
 
-    .btn-google {
+    .form-label {
+      display: block;
+      color: #a7f3d0;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: #18181b;
+      border: 2px solid #27272a;
+      color: #f4f1de;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      background: #1f2937;
+    }
+
+    .form-input::placeholder {
+      color: #71717a;
+    }
+
+    .btn-login {
       width: 100%;
       background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff;
+      color: #000;
       font-weight: 700;
-      padding: 16px;
+      padding: 14px;
       border: none;
       border-radius: 12px;
       font-size: 16px;
@@ -91,30 +115,23 @@
       transition: all 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
+      margin-top: 10px;
     }
 
-    .btn-google:hover {
+    .btn-login:hover {
       background: linear-gradient(135deg, #34d399, #10b981);
-      transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
     }
 
-    .btn-google:active {
-      transform: translateY(-1px);
+    .btn-login:active {
+      transform: translateY(0);
     }
 
-    .btn-google:disabled {
-      opacity: 0.6;
+    .btn-login:disabled {
+      opacity: 0.5;
       cursor: not-allowed;
       transform: none;
-    }
-
-    .btn-google i {
-      font-size: 20px;
     }
 
     .error-message {
@@ -188,25 +205,6 @@
       to { transform: rotate(360deg); }
     }
 
-    .divider {
-      display: flex;
-      align-items: center;
-      margin: 40px 0;
-    }
-
-    .divider-line {
-      flex: 1;
-      height: 1px;
-      background: #27272a;
-    }
-
-    .divider-text {
-      color: #71717a;
-      padding: 0 15px;
-      font-size: 12px;
-      text-transform: uppercase;
-    }
-
     .footer-text {
       color: #71717a;
       font-size: 12px;
@@ -249,12 +247,6 @@
         <div class="login-subtitle">RPG System</div>
       </div>
 
-      <!-- Descrição -->
-      <p class="login-description">
-        Bem-vindo ao mundo de Nectoflora!<br>
-        Faça login com sua conta Google para começar sua aventura.
-      </p>
-
       <!-- Mensagens -->
       <div id="error-message" class="error-message"></div>
       <div id="success-message" class="success-message"></div>
@@ -265,42 +257,52 @@
         Autenticando...
       </div>
 
-      <!-- Botão Google -->
-      <button onclick="loginWithGoogle()" class="btn-google" id="google-btn">
-        <i class="fab fa-google"></i>
-        Entrar com Google
-      </button>
+      <!-- Formulário de Login -->
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">👤 Usuário</label>
+          <input 
+            type="text" 
+            id="username" 
+            class="form-input" 
+            placeholder="Digite seu usuário" 
+            required
+            autocomplete="username"
+          >
+        </div>
 
-      <!-- Divider -->
-      <div class="divider">
-        <div class="divider-line"></div>
-        <div class="divider-text">ou</div>
-        <div class="divider-line"></div>
-      </div>
+        <div class="form-group">
+          <label class="form-label">🔐 Senha</label>
+          <input 
+            type="password" 
+            id="password" 
+            class="form-input" 
+            placeholder="Digite sua senha" 
+            required
+            autocomplete="current-password"
+          >
+        </div>
 
-      <!-- Link para Home -->
-      <a href="index.html" class="block text-center text-emerald-400 hover:text-emerald-300 transition font-semibold mt-6">
-        ← Voltar para o site
-      </a>
+        <button type="submit" class="btn-login" id="login-btn">
+          ⚔️ Entrar no Jogo
+        </button>
+      </form>
 
       <!-- Footer -->
       <p class="footer-text">
-        Ao fazer login, você concorda com nossos<br>
-        <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a>
+        Bem-vindo ao mundo de Nectoflora!<br>
+        Digite suas credenciais para começar sua aventura.
       </p>
     </div>
   </div>
 
-    <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
-
-  <!-- Seu Config -->
-  <script src="firebase-config.js"></script>
-
-  <!-- Login Script -->
   <script>
+    // ===== CONFIGURE AQUI =====
+    // Mude o usuário e senha conforme desejar
+    const VALID_USERNAME = "admin";
+    const VALID_PASSWORD = "senha123";
+    // ===========================
+
     function showError(message) {
       const errorDiv = document.getElementById('error-message');
       errorDiv.textContent = message;
@@ -319,50 +321,42 @@
       document.getElementById('success-message').classList.remove('show');
     }
 
-    async function loginWithGoogle() {
+    function handleLogin(event) {
+      event.preventDefault();
       clearMessages();
-      
-      const googleBtn = document.getElementById('google-btn');
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const loginBtn = document.getElementById('login-btn');
       const loginLoading = document.getElementById('login-loading');
-      
-      googleBtn.disabled = true;
+
+      loginBtn.disabled = true;
       loginLoading.classList.add('show');
 
-      try {
-        console.log('Iniciando login com Google...');
-        
-        const provider = new firebase.auth.GoogleAuthProvider();
-        const result = await firebase.auth().signInWithPopup(provider);
-        
-        console.log('Login bem-sucedido:', result.user.email);
-        showSuccess('✅ Login realizado com sucesso!');
-        
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1500);
-      } catch (error) {
-        console.error('Erro de login:', error);
-        let message = 'Erro ao fazer login com Google';
-        
-        if (error.code === 'auth/popup-closed-by-user') {
-          message = 'Login cancelado';
-        } else if (error.code === 'auth/popup-blocked') {
-          message = 'Pop-up foi bloqueado. Verifique as configurações do seu navegador';
-        } else if (error.code === 'auth/cancelled-popup-request') {
-          message = 'Requisição de login cancelada';
+      // Simular delay de autenticação
+      setTimeout(() => {
+        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+          // Salvar no localStorage que o usuário está logado
+          localStorage.setItem('nectoflora_logged', 'true');
+          localStorage.setItem('nectoflora_username', username);
+          
+          showSuccess('✅ Login realizado com sucesso!');
+          
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
         } else {
-          message = error.message;
+          showError('❌ Usuário ou senha incorretos!');
+          loginBtn.disabled = false;
+          loginLoading.classList.remove('show');
         }
-        
-        showError(message);
-        googleBtn.disabled = false;
-        loginLoading.classList.remove('show');
-      }
+      }, 800);
     }
 
     // Verificar se usuário já está logado
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+    window.addEventListener('load', () => {
+      const isLogged = localStorage.getItem('nectoflora_logged');
+      if (isLogged === 'true') {
         window.location.href = 'index.html';
       }
     });
