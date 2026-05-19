@@ -6,7 +6,6 @@
   <title>Login - Nectoflora RPG</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
@@ -432,7 +431,10 @@
     </div>
   </div>
 
+  <!-- Firebase Config -->
   <script src="firebase-config.js"></script>
+  
+  <!-- Login Script -->
   <script>
     function toggleForms() {
       const loginForm = document.getElementById('login-form');
@@ -496,13 +498,16 @@
       loginLoading.classList.add('show');
 
       try {
-        await firebase.auth().signInWithEmailAndPassword(email, password);
+        console.log('Tentando fazer login com:', email);
+        const result = await firebase.auth().signInWithEmailAndPassword(email, password);
+        console.log('Login bem-sucedido:', result);
         showSuccess('✅ Login realizado com sucesso!');
         
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 1500);
       } catch (error) {
+        console.error('Erro de login:', error);
         let message = 'Erro ao fazer login';
         
         if (error.code === 'auth/user-not-found') {
@@ -511,6 +516,8 @@
           message = 'Senha incorreta';
         } else if (error.code === 'auth/invalid-email') {
           message = 'Email inválido';
+        } else if (error.code === 'auth/invalid-credential') {
+          message = 'Email ou senha inválidos';
         }
         
         showError(message);
@@ -539,13 +546,16 @@
       registerLoading.classList.add('show');
 
       try {
-        await firebase.auth().createUserWithEmailAndPassword(email, password);
+        console.log('Tentando criar conta com:', email);
+        const result = await firebase.auth().createUserWithEmailAndPassword(email, password);
+        console.log('Conta criada:', result);
         showSuccess('✅ Conta criada com sucesso!');
         
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 1500);
       } catch (error) {
+        console.error('Erro ao criar conta:', error);
         let message = 'Erro ao criar conta';
         
         if (error.code === 'auth/email-already-in-use') {
@@ -565,7 +575,9 @@
 
     // Verificar se usuário já está logado
     firebase.auth().onAuthStateChanged(user => {
+      console.log('Auth state changed:', user);
       if (user) {
+        console.log('Usuário já logado, redirecionando...');
         window.location.href = 'index.html';
       }
     });
